@@ -55,11 +55,6 @@
       <Content Include="SuntionCore.csproj.user" />
     </ItemGroup>
 
-
-    <ItemGroup>
-      <Folder Include="Services\" />
-    </ItemGroup>
-
     <Target Name="拷贝模组到SPT" AfterTargets="AfterBuild" Condition="'$(SPTPath)' != ''">
         <!-- 定义变量 -->
         <PropertyGroup>
