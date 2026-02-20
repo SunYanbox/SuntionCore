@@ -20,6 +20,13 @@ public class I18N
     public static I18N? GetInstance(string name) => I18NStatics.GetValueOrDefault(name);
     /// <summary> 数据服务器 </summary>
     public static DatabaseServer? DatabaseServer { get; set; }
+    /// <summary>
+    /// 初始化DatabaseServer
+    /// </summary>
+    public static void Initialize(DatabaseServer databaseServer)
+    {
+        DatabaseServer ??= databaseServer;
+    }
     #endregion
 
     #region 实例
@@ -44,6 +51,8 @@ public class I18N
     public Dictionary<string, string>? CurrentI18NCache { get; private set; }
     /// <summary> 获取当前语言对应的SPT译文数据库 </summary>
     public Dictionary<string, string>? SptLocals => _sptLocals ??= GetSptLocals();
+    /// <summary> 只读属性, 查看支持的语言 </summary>
+    public List<string> AvailableLang => _i18n.Keys.ToList();
     /// <summary> 当前语言 </summary>
     public string CurrentLang
     {
@@ -62,7 +71,7 @@ public class I18N
     /// </summary>
     /// <exception cref="LoadLocalDBException"></exception>
     /// <exception cref="DirectoryNotFoundException"></exception>
-    public void LoadFloders(string path)
+    public void LoadFolders(string path)
     {
         if (Directory.Exists(path))
         {
@@ -115,6 +124,16 @@ public class I18N
     /// </summary>
     public void Add(string lang, string key, string value) => GetOrCreate(lang)[key] = value;
 
+    /// <summary>
+    /// 删除指定语言的指定一个键的翻译数据
+    /// </summary>
+    public void Remove(string lang, string key) => GetOrCreate(lang).Remove(key);
+    
+    /// <summary>
+    /// 删除指定语言的所有数据
+    /// </summary>
+    public void Remove(string lang) => _i18n.Remove(lang);
+    
     /// <summary>
     /// 通过字典扩展指定语言的翻译信息(覆盖已存在键)
     /// </summary>
