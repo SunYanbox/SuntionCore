@@ -26,10 +26,10 @@ public class I18N
     private static readonly Dictionary<string, I18N> I18NStatics = new();
     /// <summary> 根据I18N的名称获取I18N实例 </summary>
     [UsedImplicitly]
-    public static I18N? GetInstance(string name) => I18NStatics.GetValueOrDefault(name);
+    public static I18N? GetI18N(string name) => I18NStatics.GetValueOrDefault(name);
     /// <summary> 根据I18N的名称获取I18N实例 <br /> 如果指定名称的实例不存在时创建新的 </summary>
     [UsedImplicitly]
-    public static I18N GetOrCreateInstance(string name) => I18NStatics.GetValueOrDefault(name) ?? new I18N(name);
+    public static I18N GetOrCreateI18N(string name) => I18NStatics.GetValueOrDefault(name) ?? new I18N(name);
     /// <summary> 数据服务器 </summary>
     public static DatabaseServer? DatabaseServer { get; set; }
     /// <summary>
