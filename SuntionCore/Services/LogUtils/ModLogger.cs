@@ -27,7 +27,7 @@ public class ModLogger: IDisposable
     public const string DefaultLogFolderPath = "user/mods/SuntionCore/ModLogs";
     private static readonly Dictionary<string, ModLogger> Loggers = new();
     /// <summary> 设置默认日志文件大小上限, 超出上限后删除原文件 <remarks>当logFileMaxSize参数设置为0时使用</remarks> </summary>
-    public static long TotalDefaultLogFileMaxSize { get; [UsedImplicitly] set; } = 1 * 1024 * 1024 * 1024;
+    public static long TotalDefaultLogFileMaxSize { get; [UsedImplicitly] set; } = 1 * 1024 * 1024;
     [UsedImplicitly]
     public static ModLogger? GetLogger(string name)
     {
