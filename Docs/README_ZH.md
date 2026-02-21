@@ -269,3 +269,10 @@ long count = ModLogger.LoggerCount;
 logger?.Dispose();
 ```
 
+## 致谢
+
+灵感来源：
+- [MassivesoftCore](https://forge.sp-tarkov.com/mod/2587/massivesoftcore) | **关于制作SPT类库**
+- [MassivesoftWeapons](https://forge.sp-tarkov.com/mod/2588/massivesoftweapons) | **关于引用SPT类库**
+- [SPT Item Creator](https://forge.sp-tarkov.com/mod/2565/spt-item-creator) | **关于本地模组日志**
+- [Raid Record](https://forge.sp-tarkov.com/mod/2341/raid-record) | **关于文件尺寸计算 + 关于国际化功能**

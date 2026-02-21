@@ -278,3 +278,11 @@ long count = ModLogger.LoggerCount;
 // Typically placed in the mod's unload logic
 logger?.Dispose();
 ```
+
+## Credits
+
+Inspiration Source:
+- [MassivesoftCore](https://forge.sp-tarkov.com/mod/2587/massivesoftcore) | **About Creating SPT Libraries**
+- [MassivesoftWeapons](https://forge.sp-tarkov.com/mod/2588/massivesoftweapons) | **About Referencing SPT Libraries**
+- [SPT Item Creator](https://forge.sp-tarkov.com/mod/2565/spt-item-creator) | **About Local Mod Logging**
+- [Raid Record](https://forge.sp-tarkov.com/mod/2341/raid-record) | **About File Size Calculation + About Internationalization Features**
