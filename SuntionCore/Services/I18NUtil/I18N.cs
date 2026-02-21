@@ -64,6 +64,8 @@ public class I18N
     private readonly Dictionary<string, string> _linkTags = new();
     private string _currentLang = DefaultLang;
     private Dictionary<string, string>? _sptLocals;
+    /// <summary> 当前语言的分隔符 </summary>
+    [UsedImplicitly] public string LinkTag => _linkTags.GetValueOrDefault(CurrentLang, DefaultLinkTag);
     /// <summary> 名称 </summary>
     public string Name { get; private set; }
     /// <summary> 已加载的缓存字典 </summary>
@@ -90,6 +92,7 @@ public class I18N
                 throw new NotLoadLanguageException($"(语言 '{value}' 没有加载)");
             }
             _currentLang = value;
+            _sptLocals = null;
             CurrentI18NCache = cache;
         }
     }
@@ -218,7 +221,7 @@ public class I18N
     /// </summary>
     /// <param name="msg">有参数格式化字符串</param>
     /// <param name="args">参数对象</param>
-    public string DumpFormatStrLocal(string msg, object args)
+    public static string DumpFormatStrLocal(string msg, object args)
     {
         string localMsg = msg;
         PropertyInfo[] typeProperties = args.GetType().GetProperties();
@@ -333,7 +336,8 @@ public class I18N
     /// </summary>
     private Dictionary<string, string>? GetSptLocals()
     {
-        return DatabaseServer?.GetTables().Locales.Global[CurrentLang].Value;
+        _sptLocals = DatabaseServer?.GetTables().Locales.Global[CurrentLang].Value;
+        return _sptLocals;
     }
     #endregion
 }
