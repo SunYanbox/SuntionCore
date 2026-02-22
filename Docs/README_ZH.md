@@ -24,11 +24,8 @@
   - 使用ModLogger.GetLogger(string name)获取实例(没有时返回空)
   - 使用ModLogger.GetOrCreateLogger(string name, ModLoggerStrategy strategy = ModLoggerStrategy.SingleFile, string folderPath = DefaultLogFolderPath, long logFileMaxSize = 0)获取实例
   - 默认日志文件夹路径: `user/mods/SuntionCore/ModLogs`(存在模组使用该日志时才会在服务器加载完毕后输出日志文件夹路径->该路径下的模组的信息)
-- [ModMailService 服务端发送大量消息/消费/理赔的工具](#modmailservice-服务端发送大量消息消费理赔的工具)
-  - 提供SendMessage、SendAllMessageAsync用于发送消息
-  - 提供SplitStringByNewlines辅助拆分长字符串为适合发送给客户端的列表(SendAllMessageAsync自带此功能)
-  - 使用Payment和SendMoney分别用于消耗/获取
-  - 提供SendItemsToPlayer用于发送物品(会按照物品堆叠数据自动分隔)
+
+扩展库: [SuntionCore.SPTExtensions扩展](Extensions/SPTExtensions_ZH.md)
 
 ## 如何在你的项目引用这个库
 
@@ -274,17 +271,11 @@ var specificLogger = ModLogger.GetLogger("OtherMod");
 long count = ModLogger.LoggerCount;
 ```
 
-## ModMailService 服务端发送大量消息/消费/理赔的工具
-
-[API参考](API_ZH.md#modmailservice---公有接口)
-
-主要测试与使用在RaidRecord模组中
-
 ## 致谢
 
 灵感来源：
 - [MassivesoftCore](https://forge.sp-tarkov.com/mod/2587/massivesoftcore) | **关于制作SPT类库**
 - [MassivesoftWeapons](https://forge.sp-tarkov.com/mod/2588/massivesoftweapons) | **关于引用SPT类库**
 - [SPT Item Creator](https://forge.sp-tarkov.com/mod/2565/spt-item-creator) | **关于本地模组日志**
-- [Raid Record](https://forge.sp-tarkov.com/mod/2341/raid-record) | **关于文件尺寸计算 + 关于国际化功能 + 消费/理赔/消息发送/物品发送功能**
+- [Raid Record](https://forge.sp-tarkov.com/mod/2341/raid-record) | **关于文件尺寸计算 + 关于国际化功能**
 - [SuntionCore](https://forge.sp-tarkov.com/mod/2600/suntioncore) | **关于按照单位和步长划分数值**
