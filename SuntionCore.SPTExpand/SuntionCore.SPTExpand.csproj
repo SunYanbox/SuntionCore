@@ -25,6 +25,10 @@
         <PackageReference Include="SPTarkov.Server.Core" Version="4.0.4" />
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\SuntionCore\SuntionCore.csproj" />
+    </ItemGroup>
+
     <!-- 需要复制的数据库, 资源文件 -->
     <ItemGroup>
         <DatabasePath Include="data\**\*.*"/>

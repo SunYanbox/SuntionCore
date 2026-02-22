@@ -1,4 +1,6 @@
 ﻿using SPTarkov.Server.Core.Models.Spt.Mod;
+using SuntionCore.Services.I18NUtil;
+using SuntionCore.Services.LogUtils;
 
 namespace SuntionCore.SPTExpand
 {
@@ -21,6 +23,12 @@ namespace SuntionCore.SPTExpand
         public override bool? IsBundleMod { get; init; } = false;
         public override string License { get; init; } = "CC-BY-SA";
     }
-    
-    
+
+    public static class SuntionCoreSPTExpandMod
+    {
+        /// <summary> 本模组使用的日志 </summary>
+        public static readonly Lazy<ModLogger> Logger = new(() => ModLogger.GetOrCreateLogger("SuntionCore.SPTExpand"));
+        /// <summary> 本模组使用的本地化语言 </summary>
+        public static readonly Lazy<I18N> I18NSPTExpand = new(() => I18N.GetOrCreateI18N("SuntionCore.SPTExpand"));
+    }
 }
