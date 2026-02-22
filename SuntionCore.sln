@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuntionCore", "SuntionCore\SuntionCore.csproj", "{5354E11F-0DBE-4CB3-A01C-30BEB63085DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuntionCore.Tests", "SuntionCore.Tests\SuntionCore.Tests.csproj", "{014C8456-D807-4BDB-8F06-5E493C051609}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{5354E11F-0DBE-4CB3-A01C-30BEB63085DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5354E11F-0DBE-4CB3-A01C-30BEB63085DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5354E11F-0DBE-4CB3-A01C-30BEB63085DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{014C8456-D807-4BDB-8F06-5E493C051609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{014C8456-D807-4BDB-8F06-5E493C051609}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{014C8456-D807-4BDB-8F06-5E493C051609}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{014C8456-D807-4BDB-8F06-5E493C051609}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
