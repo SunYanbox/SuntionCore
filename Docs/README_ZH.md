@@ -258,3 +258,4 @@ long count = ModLogger.LoggerCount;
 - [MassivesoftWeapons](https://forge.sp-tarkov.com/mod/2588/massivesoftweapons) | **关于引用SPT类库**
 - [SPT Item Creator](https://forge.sp-tarkov.com/mod/2565/spt-item-creator) | **关于本地模组日志**
 - [Raid Record](https://forge.sp-tarkov.com/mod/2341/raid-record) | **关于文件尺寸计算 + 关于国际化功能**
+- [SuntionCore](https://forge.sp-tarkov.com/mod/2600/suntioncore) | **关于按照单位和步长划分数值**
