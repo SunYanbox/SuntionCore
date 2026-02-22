@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using SPTarkov.DI.Annotations;
+using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Helpers;
 using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Common;
@@ -10,8 +11,9 @@ using SPTarkov.Server.Core.Models.Enums;
 using SPTarkov.Server.Core.Models.Spt.Dialog;
 using SPTarkov.Server.Core.Routers;
 using SPTarkov.Server.Core.Services;
+using SuntionCore.Services.I18NUtil;
 
-namespace SuntionCore.SPTExpand.Services.SPTUtils;
+namespace SuntionCore.SPTExpand.Services;
 
 [Injectable(InjectionType.Singleton)]
 public class ModMailService(
@@ -20,8 +22,15 @@ public class ModMailService(
     PaymentService paymentService,
     MailSendService mailSendService,
     EventOutputHolder eventOutputHolder
-)
+): IOnLoad
 {
+    private const string KeyInvalidMoneyId = nameof(KeyInvalidMoneyId);
+    private const string KeyProfileNotFound = nameof(KeyProfileNotFound);
+    private const string KeyPaymentError = nameof(KeyPaymentError);
+    private const string KeySendMoneyError = nameof(KeySendMoneyError);
+    private const string KeyNoItemsSpecified = nameof(KeyNoItemsSpecified);
+    private const string KeySendItemError = nameof(KeySendItemError);
+    
     /// <summary> 发送信息单条长度限制 </summary>
     public const int SendLimit = 490;
 
@@ -136,7 +145,16 @@ public class ModMailService(
     {
         if (!AllowMoneys.Contains(moneyId))
         {
-            throw new ArgumentException($"货币模板Id必须在[{string.Join(", ", AllowMoneys)}]中, 但传入的值为: {moneyId}", nameof(moneyId));
+            // 获取允许的货币 ID 列表字符串用于插入到翻译中
+            string allowedList = string.Join(", ", AllowMoneys.Select(x => x.ToString()));
+            
+            throw new ArgumentException(
+                KeyInvalidMoneyId.Translate(
+                    SuntionCoreSPTExpandMod.I18NSPTExpand.Value, 
+                    new { MoneyIds = allowedList, CurrentId = moneyId }
+                ), 
+                nameof(moneyId)
+            );
         }
         
         ItemEventRouterResponse output = eventOutputHolder.GetOutput(sessionId);
@@ -148,7 +166,10 @@ public class ModMailService(
             [
                 new Warning
                 {
-                    ErrorMessage = $"未获取到Session {sessionId} 对应的玩家存档信息"
+                    ErrorMessage = KeyProfileNotFound.Translate(
+                        SuntionCoreSPTExpandMod.I18NSPTExpand.Value, 
+                        new { SessionId = sessionId }
+                    )
                 }
             ];
         }
@@ -167,7 +188,10 @@ public class ModMailService(
             output.Warnings ??= [];
             output.Warnings.Add(new Warning
             {
-                ErrorMessage = $"扣费时出现错误: {e.Message} {e.StackTrace}"
+                ErrorMessage = KeyPaymentError.Translate(
+                    SuntionCoreSPTExpandMod.I18NSPTExpand.Value, 
+                    new { Error = $"{e.Message} {e.StackTrace}" }
+                )
             });
         }
 
@@ -188,7 +212,16 @@ public class ModMailService(
     {
         if (!AllowMoneys.Contains(moneyId))
         {
-            throw new ArgumentException($"货币模板Id必须在[{string.Join(", ", AllowMoneys)}]中, 但传入的值为: {moneyId}", nameof(moneyId));
+            // 获取允许的货币 ID 列表字符串用于插入到翻译中
+            string allowedList = string.Join(", ", AllowMoneys.Select(x => x.ToString()));
+            
+            throw new ArgumentException(
+                KeyInvalidMoneyId.Translate(
+                    SuntionCoreSPTExpandMod.I18NSPTExpand.Value, 
+                    new { MoneyIds = allowedList, CurrentId = moneyId }
+                ), 
+                nameof(moneyId)
+            );
         }
         
         ItemEventRouterResponse output = eventOutputHolder.GetOutput(sessionId);
@@ -223,7 +256,10 @@ public class ModMailService(
             output.Warnings ??= [];
             output.Warnings.Add(new Warning
             {
-                ErrorMessage = $"扣费时出现错误: {e.Message} {e.StackTrace}"
+                ErrorMessage = KeySendMoneyError.Translate(
+                    SuntionCoreSPTExpandMod.I18NSPTExpand.Value, 
+                    new { Error = $"{e.Message} {e.StackTrace}" }
+                )
             });
         }
 
@@ -254,7 +290,7 @@ public class ModMailService(
                 [
                     new Warning
                     {
-                        ErrorMessage = "未指定物品"
+                        ErrorMessage = KeyNoItemsSpecified.Translate(SuntionCoreSPTExpandMod.I18NSPTExpand.Value)
                     }
                 ];
             }
@@ -279,9 +315,41 @@ public class ModMailService(
             [
                 new Warning
                 {
-                    ErrorMessage = $"发送物品时出现错误: {e.Message} {e.StackTrace}"
+                    ErrorMessage = KeySendItemError.Translate(
+                        SuntionCoreSPTExpandMod.I18NSPTExpand.Value, 
+                        new { Error = $"{e.Message} {e.StackTrace}" }
+                    )
                 }
             ];
         }
+    }
+
+
+    public Task OnLoad()
+    {
+        I18N i18N = SuntionCoreSPTExpandMod.I18NSPTExpand.Value;
+
+        i18N.Expand("ch", new Dictionary<string, string>
+        {
+            { KeyInvalidMoneyId, "货币模板 Id 必须在 [{{MoneyIds}}] 中，但传入的值为：{{CurrentId}}" },
+            { KeyProfileNotFound, "未获取到 Session {{SessionId}} 对应的玩家存档信息" },
+            { KeyPaymentError, "扣费时出现错误：{{Error}}" },
+            { KeySendMoneyError, "理赔时出现错误：{{Error}}" },
+            { KeyNoItemsSpecified, "未指定物品" },
+            { KeySendItemError, "发送物品时出现错误：{{Error}}" }
+        });
+
+        i18N.Expand("en", new Dictionary<string, string>
+        {
+            { KeyInvalidMoneyId, "Money template ID must be one of [{{MoneyIds}}], but received: {{CurrentId}}" },
+            { KeyProfileNotFound, "Failed to retrieve player profile for Session {{SessionId}}" },
+            { KeyPaymentError, "Error occurred during payment deduction: {{Error}}" },
+            { KeySendMoneyError, "An error occurred during payment processing: {{Error}}" },
+            { KeyNoItemsSpecified, "No items specified" },
+            { KeySendItemError, "Error occurred while sending items: {{Error}}" }
+        });
+
+        SuntionCoreSPTExpandMod.Logger.Value.Info("服务 ModMailService 已加载完成并初始化国际化");
+        return Task.CompletedTask;
     }
 }
