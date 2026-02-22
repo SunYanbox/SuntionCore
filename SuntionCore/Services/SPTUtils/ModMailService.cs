@@ -13,7 +13,7 @@ using SPTarkov.Server.Core.Services;
 
 namespace SuntionCore.Services.SPTUtils;
 
-[Injectable]
+[Injectable(InjectionType.Singleton)]
 public class ModMailService(
     ItemHelper itemHelper,
     ProfileHelper profileHelper,
@@ -24,6 +24,8 @@ public class ModMailService(
 {
     /// <summary> 发送信息单条长度限制 </summary>
     public const int SendLimit = 490;
+
+    private readonly HashSet<MongoId> AllowMoneys = [Money.DOLLARS, Money.EUROS, Money.GP, Money.ROUBLES];
     
     /// <summary>
     /// 分隔要发送的字符串, 避免客户端无法完整显示
@@ -123,10 +125,20 @@ public class ModMailService(
     /// <summary>
     /// 按照指定数额进行扣费
     /// </summary>
+    /// <param name="sessionId">玩家账户Id / sessionId</param>
+    /// <param name="moneyId">钱的类型的模板Id</param>
+    /// <param name="amount">消耗的指定类型钱的金额</param>
+    /// <param name="pmcData">提供后忽略sessionId参数, 没有时通过sessionId消费</param>
+    /// <exception cref="ArgumentException">货币模板Id不是欧元、卢布、GP币、美元之一时</exception>
     /// <returns>如果未成功则返回警告列表</returns>
     [UsedImplicitly]
-    public List<Warning>? Payment(MongoId sessionId, long amount, PmcData? pmcData = null)
+    public List<Warning>? Payment(MongoId sessionId, MongoId moneyId, long amount, PmcData? pmcData = null)
     {
+        if (!AllowMoneys.Contains(moneyId))
+        {
+            throw new ArgumentException($"货币模板Id必须在[{string.Join(", ", AllowMoneys)}]中, 但传入的值为: {moneyId}", nameof(moneyId));
+        }
+        
         ItemEventRouterResponse output = eventOutputHolder.GetOutput(sessionId);
         pmcData ??= profileHelper.GetPmcProfile(sessionId);
 
@@ -145,7 +157,7 @@ public class ModMailService(
         {
             paymentService.AddPaymentToOutput(
                 pmcData,
-                Money.ROUBLES,
+                moneyId,
                 amount,
                 sessionId,
                 output);
@@ -165,10 +177,20 @@ public class ModMailService(
     /// <summary>
     /// 给玩家发送钱, 且为FIR状态(对于钱来说不重要)
     /// </summary>
+    /// <param name="sessionId">玩家账户Id / sessionId</param>
+    /// <param name="moneyId">钱的类型的模板Id</param>
+    /// <param name="msg">发送物品时附带的消息</param>
+    /// <param name="amount">消耗的指定类型钱的金额</param>
+    /// <exception cref="ArgumentException">货币模板Id不是欧元、卢布、GP币、美元之一时</exception>
     /// <returns>如果未成功则返回警告列表</returns>
     [UsedImplicitly]
-    public List<Warning>? SendMoney(MongoId sessionId, string msg, double amount)
+    public List<Warning>? SendMoney(MongoId sessionId, MongoId moneyId, string msg, double amount)
     {
+        if (!AllowMoneys.Contains(moneyId))
+        {
+            throw new ArgumentException($"货币模板Id必须在[{string.Join(", ", AllowMoneys)}]中, 但传入的值为: {moneyId}", nameof(moneyId));
+        }
+        
         ItemEventRouterResponse output = eventOutputHolder.GetOutput(sessionId);
 
         try
@@ -179,7 +201,7 @@ public class ModMailService(
                 itemHelper.SplitStackIntoSeparateItems(new Item
                 {
                     Id = new MongoId(),
-                    Template = Money.ROUBLES,
+                    Template = moneyId,
                     Upd = new Upd
                     {
                         StackObjectsCount = amount,

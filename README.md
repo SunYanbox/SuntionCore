@@ -26,6 +26,11 @@ The current version includes **File Size Calculation and Formatting**, **Interna
     - Use `ModLogger.GetLogger(string name)` to get an instance (returns null if not found)
     - Use `ModLogger.GetOrCreateLogger(string name, ModLoggerStrategy strategy = ModLoggerStrategy.SingleFile, string folderPath = DefaultLogFolderPath, long logFileMaxSize = 0)` to get or create an instance
     - Default log folder path: `user/mods/SuntionCore/ModLogs` (The folder path for the mod will be output after the server finishes loading only when a mod uses this logging system -> information for mods under that path)
+- [ModMailService: A utility for sending bulk messages, processing payments, and handling claims on the server](#modmailservice-a-utility-for-bulk-messaging-payments-and-claims)
+    - Provides `SendMessage` and `SendAllMessageAsync` for message delivery.
+    - Includes `SplitStringByNewlines` to split long strings into client-friendly lists (automatically handled within `SendAllMessageAsync`).
+    - Utilizes `Payment` and `SendMoney` for deducting costs and issuing rewards, respectively.
+    - Offers `SendItemsToPlayer` for item delivery, featuring automatic batching based on stack limits across all payment, reward, messaging, and item transfer operations.
 
 ## How to Reference This Library in Your Project
 
@@ -284,11 +289,20 @@ var specificLogger = ModLogger.GetLogger("OtherMod");
 long count = ModLogger.LoggerCount;
 ```
 
+## ModMailService: A Utility for Bulk Messaging, Payments, and Claims
+
+[API Reference](Docs/API_EN.md#modmailservice---public-api)
+
+Primary testing and implementation examples can be found in the **RaidRecord** mod.
+
 ## Credits
 
 Inspiration Source:
 - [MassivesoftCore](https://forge.sp-tarkov.com/mod/2587/massivesoftcore) | **About Creating SPT Libraries**
 - [MassivesoftWeapons](https://forge.sp-tarkov.com/mod/2588/massivesoftweapons) | **About Referencing SPT Libraries**
 - [SPT Item Creator](https://forge.sp-tarkov.com/mod/2565/spt-item-creator) | **About Local Mod Logging**
-- [Raid Record](https://forge.sp-tarkov.com/mod/2341/raid-record) | **About File Size Calculation + About Internationalization Features**
+- [Raid Record](https://forge.sp-tarkov.com/mod/2341/raid-record) | 
+  - **About File Size Calculation**
+  - **About Internationalization Features**
+  - **Payment Processing | Reward Distribution | Message Delivery | Item Transfer**
 - [SuntionCore](https://forge.sp-tarkov.com/mod/2600/suntioncore) | **About formatting numeric values based on units and steps**
