@@ -25,6 +25,8 @@
   - 使用ModLogger.GetOrCreateLogger(string name, ModLoggerStrategy strategy = ModLoggerStrategy.SingleFile, string folderPath = DefaultLogFolderPath, long logFileMaxSize = 0)获取实例
   - 默认日志文件夹路径: `user/mods/SuntionCore/ModLogs`(存在模组使用该日志时才会在服务器加载完毕后输出日志文件夹路径->该路径下的模组的信息)
 
+扩展库: [SuntionCore.SPTExtensions扩展](Extensions/SPTExtensions_ZH.md)
+
 ## 如何在你的项目引用这个库
 
 1. 在模组项目文件夹下创建libs文件夹(可选)
@@ -41,6 +43,18 @@
    > HintPath为你实际的dll文件相对于csproj文件的相对路径
    > Private必须设置为false以避免在打包输出时错误的包含所有引用过的库
 4. 随后你的编译器就可以正确引用与使用该库中的内容了
+
+通过以下代码创建模组依赖关系
+
+```csharp
+class YourModMetadata
+{
+    public override Dictionary<string, Range>? ModDependencies { get; init; } = new()
+    {
+        { "com.suntion.suntioncore", new Range(">=1.0.0") }
+    };
+}
+```
 
 ## 类型扩展速览
 

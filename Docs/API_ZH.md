@@ -324,3 +324,75 @@ public class ModLogger: IDisposable
     #endregion
 }
 ```
+
+## ModMailService - 公有接口
+
+```csharp
+[Injectable(InjectionType.Singleton)]
+public class ModMailService(
+    ItemHelper itemHelper,
+    ProfileHelper profileHelper,
+    PaymentService paymentService,
+    MailSendService mailSendService,
+    EventOutputHolder eventOutputHolder
+)
+{
+    /// <summary> 发送信息单条长度限制 </summary>
+    public const int SendLimit = 490;
+    
+    /// <summary>
+    /// 分隔要发送的字符串, 避免客户端无法完整显示
+    /// </summary>
+    public static string[] SplitStringByNewlines(string str);
+    
+    /// <summary>
+    /// 将消息通过注册的聊天机器人发给对应sessionId的客户端
+    /// </summary>
+    public void SendMessage(string sessionId, string message, UserDialogInfo chatBot);
+
+    /// <summary>
+    /// 将消息通过注册的聊天机器人异步发送大量消息
+    /// <br />
+    /// 可以自动处理长文本的分隔, 避免客户端聊天窗口无法显示
+    /// </summary>
+    [UsedImplicitly] public async Task SendAllMessageAsync(string sessionId, string message, UserDialogInfo chatBot);
+    
+    /// <summary>
+    /// 按照指定数额进行扣费
+    /// </summary>
+    /// <param name="sessionId">玩家账户Id / sessionId</param>
+    /// <param name="moneyId">钱的类型的模板Id</param>
+    /// <param name="amount">消耗的指定类型钱的金额</param>
+    /// <param name="pmcData">提供后忽略sessionId参数, 没有时通过sessionId消费</param>
+    /// <exception cref="ArgumentException">货币模板Id不是欧元、卢布、GP币、美元之一时</exception>
+    /// <returns>如果未成功则返回警告列表</returns>
+    [UsedImplicitly] public List<Warning>? Payment(MongoId sessionId, MongoId moneyId, long amount, PmcData? pmcData = null);
+
+    /// <summary>
+    /// 给玩家发送钱, 且为FIR状态(对于钱来说不重要)
+    /// </summary>
+    /// <param name="sessionId">玩家账户Id / sessionId</param>
+    /// <param name="moneyId">钱的类型的模板Id</param>
+    /// <param name="msg">发送物品时附带的消息</param>
+    /// <param name="amount">消耗的指定类型钱的金额</param>
+    /// <exception cref="ArgumentException">货币模板Id不是欧元、卢布、GP币、美元之一时</exception>
+    /// <returns>如果未成功则返回警告列表</returns>
+    [UsedImplicitly] public List<Warning>? SendMoney(MongoId sessionId, MongoId moneyId, string msg, double amount);
+
+    /// <summary>
+    /// 将物品以System账户发送给玩家
+    /// </summary>
+    /// <param name="sessionId">玩家sessionId</param>
+    /// <param name="msg">提示信息</param>
+    /// <param name="items">物品列表</param>
+    /// <param name="modGiveIsFIR">是否使得给予的物品是FIR状态(对局中发现)</param>
+    /// <param name="maxStorageTimeSeconds">默认为2天</param>
+    /// <returns>如果未成功则返回警告列表</returns>
+    public List<Warning>? SendItemsToPlayer(
+        MongoId sessionId,
+        string msg,
+        List<Item>? items,
+        bool modGiveIsFIR = true,
+        long? maxStorageTimeSeconds = 172800L);
+}
+```

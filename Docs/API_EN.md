@@ -325,3 +325,74 @@ public class ModLogger : IDisposable
     #endregion
 }
 ```
+## ModMailService - Public API
+
+```csharp
+[Injectable(InjectionType.Singleton)]
+public class ModMailService(
+    ItemHelper itemHelper,
+    ProfileHelper profileHelper,
+    PaymentService paymentService,
+    MailSendService mailSendService,
+    EventOutputHolder eventOutputHolder
+)
+{
+    /// <summary> Maximum character limit for a single message. </summary>
+    public const int SendLimit = 490;
+    
+    /// <summary>
+    /// Splits a string by newlines to prevent client display issues with long texts.
+    /// </summary>
+    public static string[] SplitStringByNewlines(string str);
+    
+    /// <summary>
+    /// Sends a message to the client associated with the given sessionId via the registered chat bot.
+    /// </summary>
+    public void SendMessage(string sessionId, string message, UserDialogInfo chatBot);
+
+    /// <summary>
+    /// Asynchronously sends bulk messages to the client via the registered chat bot.
+    /// <br />
+    /// Automatically handles splitting long text to ensure compatibility with the client chat window.
+    /// </summary>
+    [UsedImplicitly] public async Task SendAllMessageAsync(string sessionId, string message, UserDialogInfo chatBot);
+    
+    /// <summary>
+    /// Deducts a specified amount of currency from the player.
+    /// </summary>
+    /// <param name="sessionId">Player account ID / Session ID.</param>
+    /// <param name="moneyId">Template ID of the currency type.</param>
+    /// <param name="amount">Amount to deduct.</param>
+    /// <param name="pmcData">If provided, this instance is used directly (ignoring sessionId); otherwise, lookup is performed via sessionId.</param>
+    /// <exception cref="ArgumentException">Thrown when the currency template ID is not one of the following: Euros, Rubles, GP Coins, or USD.</exception>
+    /// <returns>Returns a list of warnings if the operation fails partially or completely; otherwise null.</returns>
+    [UsedImplicitly] public List<Warning>? Payment(MongoId sessionId, MongoId moneyId, long amount, PmcData? pmcData = null);
+
+    /// <summary>
+    /// Sends money to the player with the FIR (Found In Raid) status (though FIR status is typically irrelevant for currency).
+    /// </summary>
+    /// <param name="sessionId">Player account ID / Session ID.</param>
+    /// <param name="moneyId">Template ID of the currency type.</param>
+    /// <param name="msg">Message attached to the transaction.</param>
+    /// <param name="amount">Amount to send.</param>
+    /// <exception cref="ArgumentException">Thrown when the currency template ID is not one of the following: Euros, Rubles, GP Coins, or USD.</exception>
+    /// <returns>Returns a list of warnings if the operation fails; otherwise null.</returns>
+    [UsedImplicitly] public List<Warning>? SendMoney(MongoId sessionId, MongoId moneyId, string msg, double amount);
+
+    /// <summary>
+    /// Sends items to the player via the "System" account.
+    /// </summary>
+    /// <param name="sessionId">Player Session ID.</param>
+    /// <param name="msg">Notification message.</param>
+    /// <param name="items">List of items to send.</param>
+    /// <param name="modGiveIsFIR">Whether the granted items should have FIR (Found In Raid) status.</param>
+    /// <param name="maxStorageTimeSeconds">Maximum storage time in seconds (default: 2 days / 172800s).</param>
+    /// <returns>Returns a list of warnings if the operation fails; otherwise null.</returns>
+    public List<Warning>? SendItemsToPlayer(
+        MongoId sessionId,
+        string msg,
+        List<Item>? items,
+        bool modGiveIsFIR = true,
+        long? maxStorageTimeSeconds = 172800L);
+}
+```
