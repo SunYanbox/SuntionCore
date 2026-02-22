@@ -8,6 +8,8 @@ The current version includes **File Size Calculation and Formatting**, **Interna
 
 ## Provided Features
 
+**For usage examples of these features, please refer to the test code in the `SuntionCore.Tests` project.**
+
 - [Type Extension Overview](#type-extension-overview)
   - Extends string member functions with multi-language support and file size calculation features for easier usage.
 - [MagnitudeFormatter - Unit-based Numeric Formatting Tool](#magnitudeformatter---unit-based-numeric-formatting-tool)
@@ -24,6 +26,24 @@ The current version includes **File Size Calculation and Formatting**, **Interna
     - Use `ModLogger.GetLogger(string name)` to get an instance (returns null if not found)
     - Use `ModLogger.GetOrCreateLogger(string name, ModLoggerStrategy strategy = ModLoggerStrategy.SingleFile, string folderPath = DefaultLogFolderPath, long logFileMaxSize = 0)` to get or create an instance
     - Default log folder path: `user/mods/SuntionCore/ModLogs` (The folder path for the mod will be output after the server finishes loading only when a mod uses this logging system -> information for mods under that path)
+
+## How to Reference This Library in Your Project
+
+1. Create a `libs` folder within your mod project directory (optional).
+2. Install this mod to SPT (the releases are packaged in a format compatible with standard mod installers by default), then copy `YourGameFolder\SPT\user\mods\SuntionCore\SuntionCore.dll` to the `libs` folder created in the previous step.
+3. Add the following content to your `YourProjectName.csproj` file:
+   ```xml
+   <ItemGroup>
+       <Reference Include="SuntionCore.dll">
+           <HintPath>libs\SuntionCore.dll</HintPath>
+           <Private>False</Private>
+       </Reference>
+   </ItemGroup>
+   ```
+   > **Note:**
+   > *   `HintPath` should be the relative path from your `.csproj` file to the actual DLL file.
+   > *   `Private` must be set to `False` to prevent all referenced libraries from being incorrectly included during the build output packaging.
+4. Your compiler will now be able to correctly reference and use the contents of this library.
 
 ## Type Extension Overview
 
@@ -271,3 +291,4 @@ Inspiration Source:
 - [MassivesoftWeapons](https://forge.sp-tarkov.com/mod/2588/massivesoftweapons) | **About Referencing SPT Libraries**
 - [SPT Item Creator](https://forge.sp-tarkov.com/mod/2565/spt-item-creator) | **About Local Mod Logging**
 - [Raid Record](https://forge.sp-tarkov.com/mod/2341/raid-record) | **About File Size Calculation + About Internationalization Features**
+- [SuntionCore](https://forge.sp-tarkov.com/mod/2600/suntioncore) | **About formatting numeric values based on units and steps**

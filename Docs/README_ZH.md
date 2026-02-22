@@ -6,6 +6,8 @@
 
 ## 提供的功能
 
+**关于如何使用这些功能可以参考SuntionCore.Tests项目中的测试代码**
+
 - [类型扩展速览](#类型扩展速览)
   - 将多语言功能, 文件尺寸计算功能扩展到字符串的成员函数, 方便于使用
 - [MagnitudeFormatter - 按单位格式化数值工具](#magnitudeformatter---按单位格式化数值工具)
@@ -23,6 +25,22 @@
   - 使用ModLogger.GetOrCreateLogger(string name, ModLoggerStrategy strategy = ModLoggerStrategy.SingleFile, string folderPath = DefaultLogFolderPath, long logFileMaxSize = 0)获取实例
   - 默认日志文件夹路径: `user/mods/SuntionCore/ModLogs`(存在模组使用该日志时才会在服务器加载完毕后输出日志文件夹路径->该路径下的模组的信息)
 
+## 如何在你的项目引用这个库
+
+1. 在模组项目文件夹下创建libs文件夹(可选)
+2. 安装本模组到SPT(本模组Releases默认打包为适配通用模组安装方式的格式), 把`你的游戏文件夹\SPT\user\mods\SuntionCore\SuntionCore.dll"`复制到上述libs文件夹下
+3. 在`你的项目名称.csproj`中写入以下内容
+   ```css
+    <ItemGroup>
+        <Reference Include="SuntionCore.dll">
+            <HintPath>libs\SuntionCore.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+   ```
+   > HintPath为你实际的dll文件相对于csproj文件的相对路径
+   > Private必须设置为false以避免在打包输出时错误的包含所有引用过的库
+4. 随后你的编译器就可以正确引用与使用该库中的内容了
 
 ## 类型扩展速览
 
@@ -258,3 +276,4 @@ long count = ModLogger.LoggerCount;
 - [MassivesoftWeapons](https://forge.sp-tarkov.com/mod/2588/massivesoftweapons) | **关于引用SPT类库**
 - [SPT Item Creator](https://forge.sp-tarkov.com/mod/2565/spt-item-creator) | **关于本地模组日志**
 - [Raid Record](https://forge.sp-tarkov.com/mod/2341/raid-record) | **关于文件尺寸计算 + 关于国际化功能**
+- [SuntionCore](https://forge.sp-tarkov.com/mod/2600/suntioncore) | **关于按照单位和步长划分数值**

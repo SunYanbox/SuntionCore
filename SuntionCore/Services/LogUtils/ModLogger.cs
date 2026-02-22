@@ -136,6 +136,26 @@ public class ModLogger: IDisposable
     #endregion
 
     #region 私有方法
+    
+    /// <summary>
+    /// [仅供测试使用] 检查指定类型的日志流是否已创建且处于可写入状态
+    /// </summary>
+    internal bool IsStreamReady(LogWriterStream type)
+    {
+        lock (_lock)
+        {
+            if (!_logWriters.TryGetValue(type, out var writer)) return false;
+            
+            try 
+            {
+                return writer.BaseStream.CanWrite; 
+            }
+            catch (ObjectDisposedException)
+            {
+                return false;
+            }
+        }
+    }
 
     private string LogMessage(LogWriterStream type, string msg, Exception? ex = null)
     {

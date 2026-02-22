@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0</TargetFrameworks>
+    <TargetFramework>net9.0</TargetFramework>
     
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -16,5 +16,16 @@
   <ItemGroup>
     <ProjectReference Include="..\SuntionCore\SuntionCore.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <TestFiles Include="TestFiles\**\*.*"/>
+  </ItemGroup>
+
+  <Target Name="CopyTestFiles" AfterTargets="Build">
+    <Copy
+      SourceFiles="@(TestFiles)"
+      DestinationFiles="@(TestFiles->'$(OutDir)TestFiles\%(RecursiveDir)%(Filename)%(Extension)')"
+      SkipUnchangedFiles="true" />
+  </Target>
   
 </Project>
