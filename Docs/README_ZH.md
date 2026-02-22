@@ -25,6 +25,8 @@
   - 使用ModLogger.GetOrCreateLogger(string name, ModLoggerStrategy strategy = ModLoggerStrategy.SingleFile, string folderPath = DefaultLogFolderPath, long logFileMaxSize = 0)获取实例
   - 默认日志文件夹路径: `user/mods/SuntionCore/ModLogs`(存在模组使用该日志时才会在服务器加载完毕后输出日志文件夹路径->该路径下的模组的信息)
 
+扩展库: [SuntionCore.SPTExtensions扩展](Extensions/SPTExtensions_ZH.md)
+
 ## 如何在你的项目引用这个库
 
 1. 在模组项目文件夹下创建libs文件夹(可选)
