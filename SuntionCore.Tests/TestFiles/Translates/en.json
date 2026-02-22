@@ -1,0 +1,8 @@
+{
+  "LinkTag": " ",
+  "common": "Common",
+  "add": "Add",
+  "and": "And",
+  "hello": "Hello, {{Name}}!",
+  "abc": "{{A}} + {{B}} = {{C}}"
+}
