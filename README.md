@@ -8,6 +8,11 @@ The current version includes **File Size Calculation and Formatting**, **Interna
 
 ## Provided Features
 
+- [Type Extension Overview](#type-extension-overview)
+  - Extends string member functions with multi-language support and file size calculation features for easier usage.
+- [MagnitudeFormatter - Unit-based Numeric Formatting Tool](#magnitudeformatter---unit-based-numeric-formatting-tool)
+  - Provides the encapsulated unit type `MagnitudeConfig` and predefined common units via `MagnitudePreset`.
+  - Supports formatting numeric values into strings based on step sizes, e.g., 12.12 KB, 36.24 MB, etc.
 - [FileSizeUtil - File Size Utility](#filesizeutil---file-size-utility)
     - Use the static class `FileSizeUtil` directly
     - Use the string extensions `ToFileSize` or `CalFileSize`
@@ -20,7 +25,7 @@ The current version includes **File Size Calculation and Formatting**, **Interna
     - Use `ModLogger.GetOrCreateLogger(string name, ModLoggerStrategy strategy = ModLoggerStrategy.SingleFile, string folderPath = DefaultLogFolderPath, long logFileMaxSize = 0)` to get or create an instance
     - Default log folder path: `user/mods/SuntionCore/ModLogs` (The folder path for the mod will be output after the server finishes loading only when a mod uses this logging system -> information for mods under that path)
 
-### String Extension Quick Look
+## Type Extension Overview
 
 ```csharp
 /// <summary>
@@ -60,16 +65,19 @@ public static string Translate(this string? value, I18N local, object? args = nu
 
 ---
 
+## MagnitudeFormatter - Unit-based Numeric Formatting Tool
+
+Located in `public static class MagnitudeFormatter`, this class provides static methods to format numeric values according to configured units and step sizes.
+
+[API Reference](Docs/API_EN.md#magnitudeformatter---public-api)
+
+### Usage Examples
+
+Refer to `SuntionCore.Tests/Services/MagnitudeFormatterTest.cs`.
+
 ## FileSizeUtil - File Size Utility
 
-Located in `public static class FileSizeUtil`, it provides static methods for quickly obtaining file sizes and converting them into human-readable formats.
-
-### 🔧 Feature Overview
-
-| Method Name   | Description                                                  | Return Value     |
-| :------------ | :----------------------------------------------------------- | :--------------- |
-| `CalFileSize` | Calculates the actual byte size of the file at the specified path. | `long` (bytes)   |
-| `GetFileSize` | Gets the size of the file at the specified path and automatically formats it into a readable string (e.g., "1.5 MB"). | `string`         |
+[API Reference](Docs/API_EN.md#filesizeutil---public-api)
 
 ### 💡 Usage Examples
 
@@ -107,9 +115,11 @@ The `I18N` class is a powerful multilingual management system that supports dyna
 - **Parameterized Replacement**: Supports string interpolation using the `{{variableName}}` format.
 - **Database Integration**: Optional integration with `DatabaseServer` for persistent storage.
 
+[API Reference](Docs/API_EN.md#i18n---public-api)
+
 ### 🛠️ Initialization and Configuration
 
-Before use, it is recommended to initialize the global database server (if persistence is needed):
+Before use, it is recommended to initialize the global database server (if `SptLocals` is required).
 
 ```csharp
 // Set the global database server
@@ -177,15 +187,6 @@ string text3 = i18n.Translate("reward_msg", args);
 // Output: Player PlayerOne has obtained 5 items
 ```
 
-### 📊 Property Description
-
-| Property        | Type             | Description                                                  |
-| :-------------- | :--------------- | :----------------------------------------------------------- |
-| `CurrentLang`   | `string`         | The currently active language code (e.g., "en", "es"). Setting it validates length and load status. |
-| `AvailableLang` | `List<string>`   | Read-only, lists all language codes currently loaded for this instance. |
-| `LinkTag`       | `string`         | The connector used for the current language (determined by the `LinkTagKey` configuration, default is a space). |
-| `SptLocals`     | `Dictionary`     | Gets the complete translation dictionary for the current language. |
-
 ### ⚠️ Exception Notes
 
 - **`NotLoadLanguageException`**: Thrown when trying to switch to a language that hasn't been loaded.
@@ -204,6 +205,8 @@ string text3 = i18n.Translate("reward_msg", args);
 - **Flexible Strategies**: Supports various strategies like single file rotation (rotates only once when the mod loads, not very suitable for servers like Fika that run continuously) and stream separation by log level (`ModLoggerStrategy`).
 - **Automatic Cleanup**: Configurable file size limit. When the limit is exceeded, old logs are automatically deleted when the server starts using the logs.
 - **Thread Safety**: The static registry uses locking mechanisms to ensure multi-threading safety.
+
+[API Reference](Docs/API_EN.md#modlogger---public-api)
 
 ### 🚀 Quick Start
 
@@ -259,24 +262,6 @@ var specificLogger = ModLogger.GetLogger("OtherMod");
 
 // Check the number of registered loggers
 long count = ModLogger.LoggerCount;
-```
-
-### ⚙️ Configuration Options
-
-| Option                       | Type           | Description                                                  |
-| :--------------------------- | :------------- | :----------------------------------------------------------- |
-| `DefaultLogFolderPath`       | `const string` | Default log storage path (`user/mods/SuntionCore/ModLogs`).  |
-| `TotalDefaultLogFileMaxSize` | `static long`  | Global default file size limit (default 1GB). Effective when the instance constructor parameter is set to 0. |
-| `Strategy`                   | `Enum`         | Log writing strategy (`SingleFileStream`, `InfoStream`, `ErrorStream`, etc.). |
-| `LogFileMaxSize`             | `long`         | Instance-specific file size limit (in bytes).                |
-
-### ♻️ Resource Cleanup
-
-`ModLogger` implements the `IDisposable` interface. When unloading a mod or upon program exit, be sure to call `Dispose()` to release file handles.
-
-```csharp
-// Typically placed in the mod's unload logic
-logger?.Dispose();
 ```
 
 ## Credits

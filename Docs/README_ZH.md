@@ -6,6 +6,11 @@
 
 ## 提供的功能
 
+- [类型扩展速览](#类型扩展速览)
+  - 将多语言功能, 文件尺寸计算功能扩展到字符串的成员函数, 方便于使用
+- [MagnitudeFormatter - 按单位格式化数值工具](#magnitudeformatter---按单位格式化数值工具)
+  - 提供封住的单位类型`MagnitudeConfig`以及常用单位的预设`MagnitudePreset`
+  - 支持根据步长格式化数值为格式化字符串: 如 12.12 KB 36.24 MB 等
 - [FileSizeUtil - 文件尺寸工具](#filesizeutil---文件尺寸工具)
   - 直接使用静态类`FileSizeUtil`
   - 使用字符串扩展`ToFileSize`或`CalFileSize`
@@ -19,7 +24,7 @@
   - 默认日志文件夹路径: `user/mods/SuntionCore/ModLogs`(存在模组使用该日志时才会在服务器加载完毕后输出日志文件夹路径->该路径下的模组的信息)
 
 
-### 字符串扩展速览
+## 类型扩展速览
 
 ```csharp
 /// <summary>
@@ -57,20 +62,21 @@ public static string Translate(this string? value, I18N local, object? args = nu
 | "key1::key2".Translate(i18N);                            | 在翻译文件中keyx对应的值为valuex<br/>当前语言默认LinkTag对应的值为- | (String)(value1-value2)          |
 | "key1".Translate(i18N, new { Name = "a", Count = "b" }); | 在翻译文件中key1对应的值为"value1: Name={{Name}} Count={{Count}}" | (String)(value1: Name=a Count=b) |
 
-这份文档是为您准备的项目 README 或 Wiki 内容，旨在清晰地展示 `FileSizeUtil`、`I18N` 和 `ModLogger` 三个核心工具类的功能、用法及注意事项。您可以直接将其复制到 GitHub 的 `README.md` 或项目的 `docs` 文件夹中。
-
 ---
+
+## MagnitudeFormatter - 按单位格式化数值工具
+
+位于 `public static class MagnitudeFormatter`, 提供静态方法用于根据单位与步长的配置格式化数值
+
+[API参考](API_ZH.md#magnitudeformatter---公有接口)
+
+### 使用示例
+
+参考`SuntionCore.Tests/Services/MagnitudeFormatterTest.cs`
 
 ## FileSizeUtil - 文件尺寸工具
 
-位于 `public static class FileSizeUtil`，提供静态方法用于快速获取文件大小并将其转换为人类可读的格式。
-
-### 🔧 功能概览
-
-| 方法名        | 描述                                                         | 返回值          |
-| :------------ | :----------------------------------------------------------- | :-------------- |
-| `CalFileSize` | 计算指定路径文件的实际字节大小。                             | `long` (字节数) |
-| `GetFileSize` | 获取指定路径文件的大小，并自动格式化为可读字符串（如 "1.5 MB"）。 | `string`        |
+[API参考](API_ZH.md#filesizeutil---公有接口)
 
 ### 💡 使用示例
 
@@ -97,8 +103,6 @@ string preciseSize = FileSizeUtil.GetFileSize(filePath, decimalPlaces: 4);
 
 ## I18N - 国际化多语言管理
 
-`I18N` 类是一个强大的多语言管理系统，支持动态加载语言包、键值连接、参数化替换等功能。
-
 ### 🚀 核心特性
 - **单例/多实例管理**：通过名称管理多个独立的翻译上下文。
 - **动态加载**：支持从文件夹批量加载 `xx.json` 格式的语言文件。
@@ -106,9 +110,11 @@ string preciseSize = FileSizeUtil.GetFileSize(filePath, decimalPlaces: 4);
 - **参数化替换**：支持 `{{变量名}}` 格式的字符串插值。
 - **数据库集成**：可选集成 `DatabaseServer` 进行持久化存储。
 
+[API参考](API_ZH.md#i18n---公有接口)
+
 ### 🛠️ 初始化与配置
 
-在使用前，建议初始化全局数据库服务器（如果需要持久化）：
+在使用前，建议初始化全局数据库服务器（如果需要使用SptLocals时）:
 
 ```csharp
 // 设置全局数据库服务器
@@ -173,15 +179,6 @@ string text3 = i18n.Translate("reward_msg", args);
 // 输出：玩家 PlayerOne 获得了 5 个物品
 ```
 
-### 📊 属性说明
-
-| 属性            | 类型           | 描述                                                         |
-| :-------------- | :------------- | :----------------------------------------------------------- |
-| `CurrentLang`   | `string`       | 当前激活的语言代码 (如 "zh", "en")。设置时会验证长度和加载状态。 |
-| `AvailableLang` | `List<string>` | 只读，列出当前实例已加载的所有语言代码。                     |
-| `LinkTag`       | `string`       | 当前语言使用的连接符 (由 `LinkTagKey` 配置决定，默认为空格)。 |
-| `SptLocals`     | `Dictionary`   | 获取当前语言对应的完整翻译字典。                             |
-
 ### ⚠️ 异常提示
 - **`NotLoadLanguageException`**: 尝试切换到未加载的语言时抛出。
 - **`I18NNameAlreadyExistException`**: 语言代码长度不为 2 或命名冲突时抛出。
@@ -192,6 +189,8 @@ string text3 = i18n.Translate("reward_msg", args);
 ## ModLogger - 模块化日志系统
 
 `ModLogger` 专为模组开发设计，旨在将模组的详细日志与主服务器日志分离，便于调试且避免污染主日志流。
+
+[API参考](API_ZH.md#modlogger---公有接口)
 
 ### 🌟 主要特点
 - **独立文件**：每个模组拥有独立的日志文件或流。
@@ -250,23 +249,6 @@ var specificLogger = ModLogger.GetLogger("OtherMod");
 
 // 查看注册数量
 long count = ModLogger.LoggerCount;
-```
-
-### ⚙️ 配置项
-
-| 配置项                       | 类型           | 说明                                                         |
-| :--------------------------- | :------------- | :----------------------------------------------------------- |
-| `DefaultLogFolderPath`       | `const string` | 默认日志存储路径 (`user/mods/SuntionCore/ModLogs`)。         |
-| `TotalDefaultLogFileMaxSize` | `static long`  | 全局默认文件大小上限 (默认 1GB)。当实例构造参数为 0 时生效。 |
-| `Strategy`                   | `Enum`         | 日志写入策略 (`SingleFileStream`, `InfoStream`, `ErrorStream` 等)。 |
-| `LogFileMaxSize`             | `long`         | 实例级别的文件大小上限 (单位：Byte)。                        |
-
-### ♻️ 资源释放
-`ModLogger` 实现了 `IDisposable` 接口。在模组卸载或程序退出时，请务必调用 `Dispose()` 以释放文件句柄。
-
-```csharp
-// 通常在模组卸载逻辑中
-logger?.Dispose();
 ```
 
 ## 致谢
