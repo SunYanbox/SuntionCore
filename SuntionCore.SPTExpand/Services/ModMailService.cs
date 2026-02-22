@@ -11,7 +11,7 @@ using SPTarkov.Server.Core.Models.Spt.Dialog;
 using SPTarkov.Server.Core.Routers;
 using SPTarkov.Server.Core.Services;
 
-namespace SuntionCore.Services.SPTUtils;
+namespace SuntionCore.SPTExpand.Services.SPTUtils;
 
 [Injectable(InjectionType.Singleton)]
 public class ModMailService(
