@@ -13,7 +13,7 @@ using SPTarkov.Server.Core.Routers;
 using SPTarkov.Server.Core.Services;
 using SuntionCore.Services.I18NUtil;
 
-namespace SuntionCore.SPTExpand.Services;
+namespace SuntionCore.SPTExtensions.Services;
 
 [Injectable(InjectionType.Singleton)]
 public class ModMailService(
@@ -150,7 +150,7 @@ public class ModMailService(
             
             throw new ArgumentException(
                 KeyInvalidMoneyId.Translate(
-                    SuntionCoreSPTExpandMod.I18NSPTExpand.Value, 
+                    SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value, 
                     new { MoneyIds = allowedList, CurrentId = moneyId }
                 ), 
                 nameof(moneyId)
@@ -167,7 +167,7 @@ public class ModMailService(
                 new Warning
                 {
                     ErrorMessage = KeyProfileNotFound.Translate(
-                        SuntionCoreSPTExpandMod.I18NSPTExpand.Value, 
+                        SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value, 
                         new { SessionId = sessionId }
                     )
                 }
@@ -189,7 +189,7 @@ public class ModMailService(
             output.Warnings.Add(new Warning
             {
                 ErrorMessage = KeyPaymentError.Translate(
-                    SuntionCoreSPTExpandMod.I18NSPTExpand.Value, 
+                    SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value, 
                     new { Error = $"{e.Message} {e.StackTrace}" }
                 )
             });
@@ -217,7 +217,7 @@ public class ModMailService(
             
             throw new ArgumentException(
                 KeyInvalidMoneyId.Translate(
-                    SuntionCoreSPTExpandMod.I18NSPTExpand.Value, 
+                    SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value, 
                     new { MoneyIds = allowedList, CurrentId = moneyId }
                 ), 
                 nameof(moneyId)
@@ -257,7 +257,7 @@ public class ModMailService(
             output.Warnings.Add(new Warning
             {
                 ErrorMessage = KeySendMoneyError.Translate(
-                    SuntionCoreSPTExpandMod.I18NSPTExpand.Value, 
+                    SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value, 
                     new { Error = $"{e.Message} {e.StackTrace}" }
                 )
             });
@@ -290,7 +290,7 @@ public class ModMailService(
                 [
                     new Warning
                     {
-                        ErrorMessage = KeyNoItemsSpecified.Translate(SuntionCoreSPTExpandMod.I18NSPTExpand.Value)
+                        ErrorMessage = KeyNoItemsSpecified.Translate(SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value)
                     }
                 ];
             }
@@ -316,7 +316,7 @@ public class ModMailService(
                 new Warning
                 {
                     ErrorMessage = KeySendItemError.Translate(
-                        SuntionCoreSPTExpandMod.I18NSPTExpand.Value, 
+                        SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value, 
                         new { Error = $"{e.Message} {e.StackTrace}" }
                     )
                 }
@@ -327,7 +327,7 @@ public class ModMailService(
 
     public Task OnLoad()
     {
-        I18N i18N = SuntionCoreSPTExpandMod.I18NSPTExpand.Value;
+        I18N i18N = SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value;
 
         i18N.Expand("ch", new Dictionary<string, string>
         {
@@ -349,7 +349,7 @@ public class ModMailService(
             { KeySendItemError, "Error occurred while sending items: {{Error}}" }
         });
 
-        SuntionCoreSPTExpandMod.Logger.Value.Info("服务 ModMailService 已加载完成并初始化国际化");
+        SuntionCoreSPTExtensionsMod.Logger.Value.Info("服务 ModMailService 已加载完成并初始化国际化");
         return Task.CompletedTask;
     }
 }

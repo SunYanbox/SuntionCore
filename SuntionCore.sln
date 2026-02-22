@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuntionCore", "SuntionCore\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuntionCore.Tests", "SuntionCore.Tests\SuntionCore.Tests.csproj", "{014C8456-D807-4BDB-8F06-5E493C051609}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuntionCore.SPTExpand", "SuntionCore.SPTExpand\SuntionCore.SPTExpand.csproj", "{FE1A90F9-1062-4485-823D-423D4A3E3B21}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuntionCore.SPTExtensions", "SuntionCore.SPTExtensions\SuntionCore.SPTExtensions.csproj", "{FE1A90F9-1062-4485-823D-423D4A3E3B21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

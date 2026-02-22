@@ -9,7 +9,7 @@ using SPTarkov.Server.Core.Models.Eft.Profile;
 using SPTarkov.Server.Core.Servers;
 using SuntionCore.Services.I18NUtil;
 
-namespace SuntionCore.SPTExpand.Services;
+namespace SuntionCore.SPTExtensions.Services;
 
 [Injectable(InjectionType = InjectionType.Singleton)]
 public class ProfileAndAccountService(
@@ -40,7 +40,7 @@ public class ProfileAndAccountService(
     [UsedImplicitly] public PmcData GetPmcDataByPlayerId(MongoId playerId)
     {
         if (!_playerId2Account.TryGetValue(playerId, out MongoId account))
-            throw new Exception(KeyNoPmcDataInstance.Translate(SuntionCoreSPTExpandMod.I18NSPTExpand.Value, new { PlayerId = playerId }));
+            throw new Exception(KeyNoPmcDataInstance.Translate(SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value, new { PlayerId = playerId }));
         SptProfile sptProfile = profileHelper.GetFullProfile(account);
         /*
          * SessionId, AccountId和PmcId相同, ScavId为PmcId+1
@@ -57,7 +57,7 @@ public class ProfileAndAccountService(
         HashSet<MongoId> accounts = profiles.Keys.ToHashSet();
         _accountIds = accounts;
         // 更新Pmc/Scav id 到账户id的映射
-        string msg = KeyLoadAccountData.Translate(SuntionCoreSPTExpandMod.I18NSPTExpand.Value);
+        string msg = KeyLoadAccountData.Translate(SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value);
         // string msg = "从SPT加载账户数据: ";
         foreach (MongoId accountId in accounts)
         {
@@ -67,32 +67,32 @@ public class ProfileAndAccountService(
             if (pmcId is not null) _playerId2Account[pmcId.Value] = accountId;
             if (scavId is not null) _playerId2Account[scavId.Value] = accountId;
             // msg += $"\n\tAccount: {accountId}, PmcId: {pmcId}, ScavId: {scavId}";
-            msg += KeyAccountIds.Translate(SuntionCoreSPTExpandMod.I18NSPTExpand.Value, new
+            msg += KeyAccountIds.Translate(SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value, new
             {
                 Account = accountId,
                 PmcId = pmcId,
                 ScavId = scavId
             });
         }
-        SuntionCoreSPTExpandMod.Logger.Value.Debug(msg);
+        SuntionCoreSPTExtensionsMod.Logger.Value.Debug(msg);
     }
     
     public Task OnLoad()
     {
-        SuntionCoreSPTExpandMod.I18NSPTExpand.Value.Expand("ch", new Dictionary<string, string>
+        SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value.Expand("ch", new Dictionary<string, string>
         {
             { KeyNoPmcDataInstance, "未找到{{PlayerId}}对应的PmcData实例" },
             { KeyLoadAccountData, "从SPT加载账户数据: " },
             { KeyAccountIds, "\n\t账户Id: {{Account}}, PmcId: {{PmcId}}, ScavId: {{ScavId}}" }
         });
-        SuntionCoreSPTExpandMod.I18NSPTExpand.Value.Expand("en", new Dictionary<string, string>
+        SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value.Expand("en", new Dictionary<string, string>
         {
             { KeyNoPmcDataInstance, "No PmcData instance found for {{PlayerId}}" },
             { KeyLoadAccountData, "Loading account data from SPT: " },
             { KeyAccountIds, "\n\tAccount ID: {{Account}}, Pmc ID: {{PmcId}}, Scav ID: {{ScavId}}" }
         });
         UpdateAccountData();
-        SuntionCoreSPTExpandMod.Logger.Value.Info("服务ProfileAndAccountService已加载完成");
+        SuntionCoreSPTExtensionsMod.Logger.Value.Info("服务ProfileAndAccountService已加载完成");
         return Task.CompletedTask;
     }
 }

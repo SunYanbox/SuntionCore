@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
-        <RootNamespace>SuntionCore.SPTExpand</RootNamespace>
+        <RootNamespace>SuntionCore.SPTExtensions</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <OutputType>Library</OutputType>
@@ -64,7 +64,7 @@
 
     <ItemGroup>
         <Content Include="SuntionCore.csproj.user" />
-        <Content Include="SuntionCore.SPTExpand.user" />
+        <Content Include="SuntionCore.SPTExtensions.user" />
     </ItemGroup>
 
 
