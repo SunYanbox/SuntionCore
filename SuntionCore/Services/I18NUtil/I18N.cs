@@ -89,7 +89,7 @@ public class I18N
             if (value.Length != 2) throw new I18NNameAlreadyExistException(value);
             if (!_i18N.TryGetValue(value, out Dictionary<string, string>? cache))
             {
-                throw new NotLoadLanguageException($"(语言 '{value}' 没有加载)");
+                throw new NotLoadLanguageException($"(设置当前语言时 语言 '{value}' 没有加载)");
             }
             _currentLang = value;
             _sptLocals = null;
@@ -320,7 +320,7 @@ public class I18N
                     return translation;
                 }
                 
-                throw new NotLoadLanguageException();
+                throw new NotLoadLanguageException($"获取语言'{CurrentLang}'的键{key}时没有加载任何语言包");
             }
         }
 
