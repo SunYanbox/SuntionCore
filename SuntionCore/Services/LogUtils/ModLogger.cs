@@ -159,7 +159,12 @@ public class ModLogger: IDisposable
 
     private string LogMessage(LogWriterStream type, string msg, Exception? ex = null)
     {
-        if (_disposed) return $"ModLogger({ModName})已销毁";
+        if (_disposed)
+        {
+            string exMsg = ex is not null ? $"错误: {ex.GetType().Name}({ex.Message} Stack: {ex.StackTrace})" : string.Empty;
+            Console.WriteLine($"\033[91m[SuntionCore] Error - 在已经销毁写入流{type.ToString()}的情况下尝试记录日志: {msg} {exMsg}\033[0m");
+            return $"ModLogger({ModName})已销毁";
+        }
         if (type == LogWriterStream.SingleFileStream)
         {
             throw new ArgumentOutOfRangeInThereException(
