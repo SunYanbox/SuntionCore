@@ -20,6 +20,7 @@ public class ProfileAndAccountService(
     private const string KeyNoPmcDataInstance = nameof(KeyNoPmcDataInstance);
     private const string KeyLoadAccountData = nameof(KeyLoadAccountData);
     private const string KeyAccountIds = nameof(KeyAccountIds);
+    private bool initialized;
     
     /// <summary> Pmc/Scav id 到账户id的映射 </summary>
     private readonly Dictionary<MongoId, MongoId> _playerId2Account = new();
@@ -53,6 +54,7 @@ public class ProfileAndAccountService(
     /// <summary> 维护常用Id映射 </summary>
     public void UpdateAccountData()
     {
+        Initialize();
         Dictionary<MongoId, SptProfile> profiles = saveServer.GetProfiles();
         HashSet<MongoId> accounts = profiles.Keys.ToHashSet();
         _accountIds = accounts;
@@ -79,6 +81,16 @@ public class ProfileAndAccountService(
     
     public Task OnLoad()
     {
+        Initialize();
+        UpdateAccountData();
+        SuntionCoreSPTExtensionsMod.Logger.Value.Info("服务ProfileAndAccountService已加载完成");
+        return Task.CompletedTask;
+    }
+
+    private void Initialize()
+    {
+        if (initialized) return;
+        initialized = true;
         SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value.Expand("ch", new Dictionary<string, string>
         {
             { KeyNoPmcDataInstance, "未找到{{PlayerId}}对应的PmcData实例" },
@@ -91,8 +103,5 @@ public class ProfileAndAccountService(
             { KeyLoadAccountData, "Loading account data from SPT: " },
             { KeyAccountIds, "\n\tAccount ID: {{Account}}, Pmc ID: {{PmcId}}, Scav ID: {{ScavId}}" }
         });
-        UpdateAccountData();
-        SuntionCoreSPTExtensionsMod.Logger.Value.Info("服务ProfileAndAccountService已加载完成");
-        return Task.CompletedTask;
     }
 }

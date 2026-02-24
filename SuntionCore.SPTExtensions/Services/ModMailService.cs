@@ -30,6 +30,7 @@ public class ModMailService(
     private const string KeySendMoneyError = nameof(KeySendMoneyError);
     private const string KeyNoItemsSpecified = nameof(KeyNoItemsSpecified);
     private const string KeySendItemError = nameof(KeySendItemError);
+    private bool initialized;
     
     /// <summary> 发送信息单条长度限制 </summary>
     public const int SendLimit = 490;
@@ -143,6 +144,7 @@ public class ModMailService(
     [UsedImplicitly]
     public List<Warning>? Payment(MongoId sessionId, MongoId moneyId, long amount, PmcData? pmcData = null)
     {
+        Initialize();
         if (!AllowMoneys.Contains(moneyId))
         {
             // 获取允许的货币 ID 列表字符串用于插入到翻译中
@@ -210,6 +212,7 @@ public class ModMailService(
     [UsedImplicitly]
     public List<Warning>? SendMoney(MongoId sessionId, MongoId moneyId, string msg, double amount)
     {
+        Initialize();
         if (!AllowMoneys.Contains(moneyId))
         {
             // 获取允许的货币 ID 列表字符串用于插入到翻译中
@@ -284,6 +287,7 @@ public class ModMailService(
     {
         try
         {
+            Initialize();
             if (items?.Count <= 0)
             {
                 return
@@ -327,6 +331,15 @@ public class ModMailService(
 
     public Task OnLoad()
     {
+        Initialize();
+        SuntionCoreSPTExtensionsMod.Logger.Value.Info("服务 ModMailService 已加载完成并初始化国际化");
+        return Task.CompletedTask;
+    }
+
+    private void Initialize()
+    {
+        if (initialized) return;
+        initialized = true;
         I18N i18N = SuntionCoreSPTExtensionsMod.I18NSPTExtensions.Value;
 
         i18N.Expand("ch", new Dictionary<string, string>
@@ -348,8 +361,5 @@ public class ModMailService(
             { KeyNoItemsSpecified, "No items specified" },
             { KeySendItemError, "Error occurred while sending items: {{Error}}" }
         });
-
-        SuntionCoreSPTExtensionsMod.Logger.Value.Info("服务 ModMailService 已加载完成并初始化国际化");
-        return Task.CompletedTask;
     }
 }
