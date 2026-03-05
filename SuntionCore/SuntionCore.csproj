@@ -48,7 +48,7 @@
               DestinationFolder="$(BeforeZipPath)data\%(RecursiveDir)"/>
         <Copy SourceFiles="@(WWWRootPath)"
               DestinationFolder="$(BeforeZipPath)wwwroot\%(RecursiveDir)"/>
-        <Exec WorkingDirectory="$(OutputPath)" Command="$(ZipToolPath) a -tzip -mx=9 $(AssemblyName)-$(Version).7z SPT\"/>
+        <Exec WorkingDirectory="$(OutputPath)" Command="$(ZipToolPath) a -t7z -mx=9 $(AssemblyName)-$(Version).7z SPT\"/>
     </Target>
 
 
