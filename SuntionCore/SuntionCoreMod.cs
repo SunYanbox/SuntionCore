@@ -12,7 +12,7 @@ namespace SuntionCore
     public record SuntionCoreMetadata : AbstractModMetadata
     {
         public override string ModGuid { get; init; } = "com.suntion.suntioncore";
-        public override string Name { get; init; } = SuntionCoreLoad.ModName;
+        public override string Name { get; init; } = SuntionCoreMod.ModName;
         public override string Author { get; init; } = "Suntion";
         public override List<string>? Contributors { get; init; } = [];
         public override SemanticVersioning.Version Version { get; init; } = new("1.1.0");
@@ -26,19 +26,23 @@ namespace SuntionCore
         public override string License { get; init; } = "CC-BY-SA";
     }
 
-    [Injectable(InjectionType.Singleton, TypePriority = int.MaxValue)]
-    public class SuntionCoreLoad(ISptLogger<SuntionCoreLoad> logger): IOnLoad
+    internal static class SuntionCoreMod
     {
         public const string ModName = "SuntionCore";
         
+        public static readonly ModLogger Logger = ModLogger.GetOrCreateLogger(ModName);
+    }
+
+    [Injectable(InjectionType.Singleton, TypePriority = int.MaxValue)]
+    public class SuntionCoreLoad(ISptLogger<SuntionCoreLoad> logger): IOnLoad
+    {
         public Task OnLoad()
         {
             // 仅有本模组日志不输出
-            if (ModLogger.LoggerCount == 1 && ModLogger.GetLogger(ModName) is not null) return Task.CompletedTask;
+            if (ModLogger.LoggerCount == 1 && ModLogger.GetLogger(SuntionCoreMod.ModName) is not null) return Task.CompletedTask;
             // 否则输出日志路径
             if (ModLogger.LoggerCount > 0)
             {
-                ModLogger suntionCoreModLogger = ModLogger.GetOrCreateLogger(ModName);
                 StringBuilder stringBuilder = new();
                 stringBuilder.AppendLine($"默认日志路径为: \"{Path.GetFullPath(ModLogger.DefaultLogFolderPath)}\"");
                 Dictionary<string, HashSet<ModLogger>> loggers = new();
@@ -62,7 +66,7 @@ namespace SuntionCore
                     }
                 }
 
-                logger.Info(suntionCoreModLogger.Info(stringBuilder.ToString()));
+                logger.Info(SuntionCoreMod.Logger.Info(stringBuilder.ToString()));
             }
             return Task.CompletedTask;
         }
