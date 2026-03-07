@@ -24,6 +24,10 @@
   - 使用ModLogger.GetLogger(string name)获取实例(没有时返回空)
   - 使用ModLogger.GetOrCreateLogger(string name, ModLoggerStrategy strategy = ModLoggerStrategy.SingleFile, string folderPath = DefaultLogFolderPath, long logFileMaxSize = 0)获取实例
   - 默认日志文件夹路径: `user/mods/SuntionCore/ModLogs`(存在模组使用该日志时才会在服务器加载完毕后输出日志文件夹路径->该路径下的模组的信息)
+- HashUtil - 多种哈希算法的静态工具
+  - 使用HashUtil.Hash(string text, HashAlgo hashAlgo = HashAlgo.SHA256)获取字符串的字符串格式哈希
+  - 使用Hash(byte[] data, HashAlgo hashAlgo = HashAlgo.SHA256)获取byte[]的byte[]格式哈希
+  - [API](API_ZH.md#hashutil---公有接口)
 
 扩展库: [SuntionCore.SPTExtensions扩展](Extensions/SPTExtensions_ZH.md)
 
