@@ -396,3 +396,46 @@ public class ModMailService(
         long? maxStorageTimeSeconds = 172800L);
 }
 ```
+
+## HashUtil
+
+```csharp
+/// <summary>
+/// Provides hash calculation functionality for strings and byte arrays
+/// </summary>
+/// <remarks>
+/// This is a static utility class that encapsulates common hash algorithms and provides convenient hash calculation methods.
+/// Supports SHA1, SHA256, MD5, SHA384, SHA512 algorithms, with SHA256 as default.
+/// </remarks>
+public static class HashUtil
+{
+    /// <summary>
+    /// Calculates the hash value of the input string and returns it as a hexadecimal string
+    /// </summary>
+    /// <param name="text">The input string to hash</param>
+    /// <param name="hashAlgo">The specified hash algorithm, defaults to <see cref="HashAlgo.SHA256"/></param>
+    /// <returns>
+    /// Returns a hexadecimal string representing the hash value
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null</exception>
+    /// <exception cref="NotSupportedException">Thrown when the specified hash algorithm is not supported</exception>
+    [UsedImplicitly] public static string Hash(string text, HashAlgo hashAlgo = HashAlgo.SHA256);
+
+    /// <summary>
+    /// Calculates the hash value of the input byte array and returns it as a byte array
+    /// </summary>
+    /// <param name="data">The input byte array to hash</param>
+    /// <param name="hashAlgo">The specified hash algorithm, defaults to <see cref="HashAlgo.SHA256"/></param>
+    /// <returns>
+    /// Returns a byte array representing the hash value
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="data"/> is null</exception>
+    /// <exception cref="NotSupportedException">Thrown when the specified hash algorithm is not supported</exception>
+    /// <remarks>
+    /// This method uses .NET's built-in static HashData method (.NET 5+),
+    /// which doesn't require creating a HashAlgorithm instance, offering better performance
+    /// and eliminating the need for manual resource disposal
+    /// </remarks>
+    public static byte[] Hash(byte[] data, HashAlgo hashAlgo = HashAlgo.SHA256);
+}
+```
