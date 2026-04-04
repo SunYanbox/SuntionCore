@@ -1,5 +1,8 @@
 ## SuntionCore
 
+![GitHub License](https://img.shields.io/github/license/SunYanbox/SuntionCore)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/SunYanbox/SuntionCore/total)
+
 [中文](Docs/README_ZH.md)
 
 Some commonly used methods extracted and optimized from the mods I've created, suitable for SPT server mods.
