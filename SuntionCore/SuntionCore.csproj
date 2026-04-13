@@ -7,6 +7,9 @@
         <Nullable>enable</Nullable>
         <OutputType>Library</OutputType>
         <EnableDefaultContentItems>false</EnableDefaultContentItems>
+        <PackageId>SuntionCore</PackageId>
+        <Authors>Suntion</Authors>
+        <Company>Suntion</Company>
         <Version>1.2.0</Version>
         <!-- The two lines below will set the output path for the binaries -->
         <OutputPath>bin\$(Configuration)\$(ProjectName)\$(AssemblyName)\</OutputPath>
@@ -57,11 +60,6 @@
 
     <ItemGroup>
         <None Include="$(MSBuildProjectFullPath).user" Condition="Exists('$(MSBuildProjectFullPath).user')"/>
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <Content Include="SuntionCore.csproj.user" />
     </ItemGroup>
 
     <Target Name="拷贝模组到SPT" AfterTargets="AfterBuild" Condition="'$(SPTPath)' != ''">

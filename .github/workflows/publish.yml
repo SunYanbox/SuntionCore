@@ -4,105 +4,29 @@ on:
     branches:
       - master
 jobs:
-  publish_suntion:
-    name: build, pack & publish
+  build-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # enable GitHub OIDC token issuance for this job
+    
     steps:
-      - uses: actions/checkout@v6.0.2
-
-      # - name: Setup dotnet
-      #   uses: actions/setup-dotnet@v1.5.0
-      #   with:
-      #     dotnet-version: 3.1.200
-
-      # Publish
-      - name: publish on version change for SuntionCore
-        id: publish_nuget
-        uses: brandedoutcast/publish-nuget@v2.5.5
+      # Build your artifacts/my-sdk.nupkg package here
+      - name: Pack specific projects
+        run: |
+          dotnet pack SuntionCore/SuntionCore.csproj -c Release -o artifacts
+          dotnet pack SuntionCore.SPTExtensions/SuntionCore.SPTExtensions.csproj -c Release -o artifacts
+    
+      # Get a short-lived NuGet API key
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: login
         with:
-          # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: SuntionCore/SuntionCore.csproj
-
-          # Configuration to build and package
-          BUILD_CONFIGURATION: Release
-
-          # Platform target to compile (default is empty/AnyCPU)
-          # BUILD_PLATFORM: x64
-
-          # NuGet package id, used for version detection & defaults to project name
-          # PACKAGE_NAME: Core
-
-          # Filepath with version info, relative to root of repository & defaults to PROJECT_FILE_PATH
-          # VERSION_FILE_PATH: Directory.Build.props
-
-          # Regex pattern to extract version info in a capturing group
-          # VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
-
-          # Useful with external providers like Nerdbank.GitVersioning, ignores VERSION_FILE_PATH & VERSION_REGEX
-          # VERSION_STATIC: 1.0.0
-
-          # Flag to toggle git tagging, enabled by default
-          # TAG_COMMIT: true
-
-          # Format of the git tag, [*] gets replaced with actual version
-          # TAG_FORMAT: v*
-
-          # API key to authenticate with NuGet server
-          # NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-
-          # NuGet server uri hosting the packages, defaults to https://api.nuget.org
-          # NUGET_SOURCE: https://api.nuget.org
-
-          # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
-          # INCLUDE_SYMBOLS: false
-  publish_suntion_extensions:
-    name: build, pack & publish
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6.0.2
-
-      # - name: Setup dotnet
-      #   uses: actions/setup-dotnet@v1.5.0
-      #   with:
-      #     dotnet-version: 3.1.200
-
-      # Publish
-      - name: publish on version change for SuntionCore.SPTExtensions
-        id: publish_nuget
-        uses: brandedoutcast/publish-nuget@v2.5.5
-        with:
-          # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: SuntionCore.SPTExtensions/SuntionCore.SPTExtensions.csproj
-
-          # Configuration to build and package
-          BUILD_CONFIGURATION: Release
-
-          # Platform target to compile (default is empty/AnyCPU)
-          # BUILD_PLATFORM: x64
-
-          # NuGet package id, used for version detection & defaults to project name
-          # PACKAGE_NAME: Core
-
-          # Filepath with version info, relative to root of repository & defaults to PROJECT_FILE_PATH
-          # VERSION_FILE_PATH: Directory.Build.props
-
-          # Regex pattern to extract version info in a capturing group
-          # VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
-
-          # Useful with external providers like Nerdbank.GitVersioning, ignores VERSION_FILE_PATH & VERSION_REGEX
-          # VERSION_STATIC: 1.0.0
-
-          # Flag to toggle git tagging, enabled by default
-          # TAG_COMMIT: true
-
-          # Format of the git tag, [*] gets replaced with actual version
-          # TAG_FORMAT: v*
-
-          # API key to authenticate with NuGet server
-          # NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-
-          # NuGet server uri hosting the packages, defaults to https://api.nuget.org
-          # NUGET_SOURCE: https://api.nuget.org
-
-          # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
-          # INCLUDE_SYMBOLS: false
+          user: contoso-bot # Recommended: use a secret like ${{ secrets.NUGET_USER }} for your nuget.org username (profile name), NOT your email address
+    
+      # Push the package
+      - name: NuGet push with wildcard
+        run: |
+          # 推送所有 SuntionCore 相关包
+          dotnet nuget push "artifacts/SuntionCore*.nupkg" --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      # - name: NuGet push
+      #   run: dotnet nuget push artifacts/my-sdk.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json

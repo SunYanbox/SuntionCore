@@ -7,6 +7,9 @@
         <Nullable>enable</Nullable>
         <OutputType>Library</OutputType>
         <EnableDefaultContentItems>false</EnableDefaultContentItems>
+        <PackageId>SuntionCore.SPTExtensions</PackageId>
+        <Authors>Suntion</Authors>
+        <Company>Suntion</Company>
         <Version>1.0.0</Version>
         <!-- The two lines below will set the output path for the binaries -->
         <OutputPath>bin\$(Configuration)\$(ProjectName)\$(AssemblyName)\</OutputPath>
@@ -63,13 +66,6 @@
         <None Include="$(MSBuildProjectFullPath).user" Condition="Exists('$(MSBuildProjectFullPath).user')"/>
         <None Remove="Services\SPTUtils\**" />
     </ItemGroup>
-
-
-    <ItemGroup>
-        <Content Include="SuntionCore.csproj.user" />
-        <Content Include="SuntionCore.SPTExtensions.user" />
-    </ItemGroup>
-
 
     <ItemGroup>
       <Compile Remove="Services\SPTUtils\**" />
