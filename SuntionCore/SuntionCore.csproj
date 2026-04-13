@@ -59,11 +59,6 @@
         <None Include="$(MSBuildProjectFullPath).user" Condition="Exists('$(MSBuildProjectFullPath).user')"/>
     </ItemGroup>
 
-
-    <ItemGroup>
-      <Content Include="SuntionCore.csproj.user" />
-    </ItemGroup>
-
     <Target Name="拷贝模组到SPT" AfterTargets="AfterBuild" Condition="'$(SPTPath)' != ''">
         <!-- 定义变量 -->
         <PropertyGroup>

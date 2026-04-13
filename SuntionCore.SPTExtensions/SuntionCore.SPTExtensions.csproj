@@ -64,13 +64,6 @@
         <None Remove="Services\SPTUtils\**" />
     </ItemGroup>
 
-
-    <ItemGroup>
-        <Content Include="SuntionCore.csproj.user" />
-        <Content Include="SuntionCore.SPTExtensions.user" />
-    </ItemGroup>
-
-
     <ItemGroup>
       <Compile Remove="Services\SPTUtils\**" />
     </ItemGroup>
