@@ -1,8 +1,10 @@
 #nullable enable
 using System;
+using System.IO;
 using System.Text;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SuntionCore.Services.FileUtils;
 using SuntionCore.Services.LogUtils;
 
 namespace SuntionCore.Tests.Services.LogUtils;
@@ -120,5 +122,16 @@ public class ModLoggerTest
             }
             return sb.ToString();
         }
+    }
+
+    [TestMethod]
+    public void TestBigFileLogger()
+    {
+        string largeFile = Path.Combine(TestData.TestLogFolder, "BigFile.log");
+        File.WriteAllText(largeFile, new string('X', 1500));
+        Console.WriteLine($"Log file size: {FileSizeUtil.CalFileSize(largeFile)}");
+        var loggerBigFile = ModLogger.GetOrCreateLogger("BigFile", ModLoggerStrategy.SingleFile, TestData.TestLogFolder, 1024);
+        loggerBigFile.Info("111");
+        Console.WriteLine($"Log file size: {FileSizeUtil.CalFileSize(largeFile)}");
     }
 }
